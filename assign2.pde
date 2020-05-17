@@ -157,7 +157,7 @@ void draw() {
     }
     
     //don' touch soldier
-    if(groundhogX >= soldierX && groundhogX < soldierX+80 && groundhogY >= soldierY && groundhogY < soldierY+80){
+    if(groundhogX >= soldierX-80 && groundhogX < soldierX && groundhogY >= soldierY && groundhogY < soldierY+80){
       groundhogX = 320; 
       groundhogY = 80; 
       TOTAL_LIFE -= 1;
