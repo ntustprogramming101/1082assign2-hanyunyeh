@@ -112,7 +112,7 @@ void draw() {
     }
     
     //set soldier
-    image(soldier,soldierX,soldierY);
+    image(soldier,soldierX-80,soldierY);
     //let the soldier move 
     soldierSpeed = 2;
     soldierX += soldierSpeed;
