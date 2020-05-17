@@ -45,7 +45,7 @@ void setup() {
   
   soldier = loadImage("img/soldier.png");
   //set soldier's coordinate
-  soldierX = -80;
+  soldierX = 0;
   soldierY = floor(random(2,6))*80;
   
   cabbage = loadImage("img/cabbage.png");
@@ -116,7 +116,7 @@ void draw() {
     //let the soldier move 
     soldierSpeed = 2;
     soldierX += soldierSpeed;
-    soldierX %= 640; 
+    soldierX %= 720; 
     
     //set cabbage
     if(cabbageTouched == false){
