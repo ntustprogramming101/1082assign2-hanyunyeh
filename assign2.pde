@@ -1,9 +1,14 @@
 final int GAME_START = 1 , GAME_RUN = 2 , GAME_LOSE = 3;
 int gameState;
 
+int groundhogMoveTime = 250;
+int hitPoints = 2; //groundhog's initial life point
+int actionFrame; //groundhog's moving frame 
+float lastTime; //time when the groundhog finished moving
 
+float  groundhogLestX, groundhogLestY;
 int soldierX,soldierY,soldierSpeed;
-int groundhogX,groundhogY,groundhogSpeed;
+float groundhogX,groundhogY,groundhogSpeed;
 int cabbageX,cabbageY;
 
 PImage bg ,life ,robot ,soil ,soldier ,cabbage ;
@@ -35,6 +40,11 @@ void setup() {
   groundhogX = 320;
   groundhogY = 80;
   groundhogSpeed = 80;
+  
+  frameRate(60);
+  gameState = GAME_START;
+  lastTime = millis(); // save lastest time call the millis();
+  
   life = loadImage("img/life.png");
   soil = loadImage("img/soil.png");
   
@@ -123,23 +133,43 @@ void draw() {
       image(cabbage,cabbageX,cabbageY);
     }
     
-    //set groundhog 
-    
-    if(downPressed == true){
-    image(groundhogDown,groundhogX,groundhogY);
+  if (downPressed == false && leftPressed == false && rightPressed == false) {
+      image(groundhogIdle, groundhogX, groundhogY);
     }
-    
-    if(rightPressed == true){
-    image(groundhogRight,groundhogX,groundhogY);
+    //draw the groundhogDown image between 1-14 frames
+    if (downPressed) {
+      actionFrame++;
+      if (actionFrame > 0 && actionFrame < 15) {
+        groundhogY += 80 / 15.0;
+        image(groundhogDown, groundhogX, groundhogY);
+      } else {
+        groundhogY = groundhogLestY + 80;
+        downPressed = false;
+      }
     }
-    
-    if(leftPressed == true){
-    image(groundhogLeft,groundhogX,groundhogY);
+    //draw the groundhogLeft image between 1-14 frames
+    if (leftPressed) {
+      actionFrame++;
+      if (actionFrame > 0 && actionFrame < 15) {
+        groundhogX -= 80 / 15.0;
+        image(groundhogLeft, groundhogX, groundhogY);
+      } else {
+        groundhogX = groundhogLestX - 80;
+        leftPressed = false;
+      }
     }
-    
-    if(noPressed == true){
-    image(groundhogIdle,groundhogX,groundhogY);
+    //draw the groundhogRight image between 1-14 frames
+    if (rightPressed) {
+      actionFrame++;
+      if (actionFrame > 0 && actionFrame < 15) {
+        groundhogX += 80 / 15.0;
+        image(groundhogRight, groundhogX, groundhogY);
+      } else {
+        groundhogX = groundhogLestX + 80;
+        rightPressed = false;
+      }
     }
+
     
     
     //boundary detection
@@ -209,45 +239,33 @@ break;
 }
 
 void keyPressed(){
+  float newTime = millis(); //time when the groundhog started moving
   if (key == CODED){
     switch (keyCode){
 
       case DOWN:
-        downPressed = true;
-        noPressed = false;
-        groundhogY += groundhogSpeed;
-        
+      if (newTime - lastTime > 250) {
+        downPressed = true;      
+        actionFrame = 0;
+        groundhogLestY = groundhogY;
+        lastTime = newTime;
+      }
         break;
       case RIGHT:
-        rightPressed = true;
-        noPressed = false;
-         groundhogX += groundhogSpeed;
+       if (newTime - lastTime > 250) {
+        rightPressed = true;         
+         actionFrame = 0;
+        groundhogLestX = groundhogX;
+        lastTime = newTime;
+       }
         break;
       case LEFT :
-        leftPressed = true;
-        noPressed = false;
-        groundhogX -= groundhogSpeed;
-        break;
-    }
-  }
-}
-
-
-void keyReleased(){
-    if (key == CODED){
-    switch (keyCode){
-
-      case DOWN:
-        downPressed = false;
-        noPressed = true;
-        break;
-      case RIGHT:
-        rightPressed = false;
-        noPressed = true;
-        break;
-      case LEFT :
-        leftPressed = false;
-        noPressed = true;
+      if (newTime - lastTime > 250) {
+        leftPressed = true;       
+        actionFrame = 0;
+        groundhogLestX = groundhogX;
+        lastTime = newTime;
+      }
         break;
     }
   }
